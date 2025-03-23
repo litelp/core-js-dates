@@ -76,8 +76,36 @@ function getDayName(date) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const d = new Date(date);
+  const dayOfWeek = d.getUTCDay();
+  let nextFriday;
+  switch (dayOfWeek) {
+    case 0:
+      nextFriday = new Date(date.setUTCDate(date.getUTCDate() + 5));
+      break;
+    case 1:
+      nextFriday = new Date(date.setUTCDate(date.getUTCDate() + 4));
+      break;
+    case 2:
+      nextFriday = new Date(date.setUTCDate(date.getUTCDate() + 3));
+      break;
+    case 3:
+      nextFriday = new Date(date.setUTCDate(date.getUTCDate() + 2));
+      break;
+    case 4:
+      nextFriday = new Date(date.setUTCDate(date.getUTCDate() + 1));
+      break;
+    case 5:
+      nextFriday = new Date(date.setUTCDate(date.getUTCDate() + 7));
+      break;
+    case 6:
+      nextFriday = new Date(date.setUTCDate(date.getUTCDate() + 6));
+      break;
+    default:
+      nextFriday = 0;
+  }
+  return nextFriday;
 }
 
 /**
@@ -91,8 +119,8 @@ function getNextFriday(/* date */) {
  * 1, 2024 => 31
  * 2, 2024 => 29
  */
-function getCountDaysInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountDaysInMonth(month, year) {
+  return new Date(year, month, 0).getDate();
 }
 
 /**
@@ -106,8 +134,10 @@ function getCountDaysInMonth(/* month, year */) {
  * '2024-02-01T00:00:00.000Z', '2024-02-02T00:00:00.000Z'  => 2
  * '2024-02-01T00:00:00.000Z', '2024-02-12T00:00:00.000Z'  => 12
  */
-function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
-  throw new Error('Not implemented');
+function getCountDaysOnPeriod(dateStart, dateEnd) {
+  const first = new Date(dateStart);
+  const last = new Date(dateEnd);
+  return Math.round(last - first) / 1000 / 3600 / 24 + 1;
 }
 
 /**
@@ -142,8 +172,17 @@ function isDateInPeriod(/* date, period */) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const d = new Date(date);
+  const day = d.getDate();
+  const month = d.getMonth() + 1;
+  const year = d.getFullYear();
+  const hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
+  const minutes = d.getMinutes().toString().padStart(2, '0');
+  const seconds = d.getSeconds().toString().padStart(2, '0');
+  const timeSt = d.getHours() > 12 ? ` PM` : ` AM`;
+  const fullDate = `${month}/${day}/${year}, ${hour}:${minutes}:${seconds}`;
+  return fullDate.concat(timeSt);
 }
 
 /**
