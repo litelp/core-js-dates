@@ -239,8 +239,17 @@ function getWeekNumberByDate(/* date */) {
  * Date(2024, 0, 13) => Date(2024, 8, 13)
  * Date(2023, 1, 1) => Date(2023, 9, 13)
  */
-function getNextFridayThe13th(/* date */) {
-  throw new Error('Not implemented');
+function getNextFridayThe13th(date) {
+  const d = new Date(date);
+  const day = d.getUTCDate();
+  let month = d.getUTCMonth();
+  const year = d.getUTCFullYear();
+  let currDay = new Date(year, month, day);
+  while (currDay.getUTCDate() !== 5 && currDay.getUTCDay() !== 13) {
+    month += 1;
+    currDay = new Date(year, month, 13);
+  }
+  return currDay;
 }
 
 /**
@@ -289,7 +298,7 @@ function getWorkSchedule(period, countWorkDays, countOffDays) {
   const endDay = new Date(end[2], end[1], end[0]);
   const currentDay = startDay;
   const schedule = [];
-  if (currentDay <= endDay) {
+  while (currentDay <= endDay) {
     for (let i = 0; i <= countWorkDays && currentDay <= endDay; i += 1) {
       const str = `${String(currentDay.getDate()).padStart(2, '0')}-${String(currentDay.getMonth()).padStart(2, '0')}-${currentDay.getFullYear()}`;
       schedule.push(str);
